@@ -1,2 +1,2 @@
 # bb8
-control BB-8(Sphero) by motion analysis (deep learning)
+control BB-8(Sphero) by [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
