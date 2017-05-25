@@ -85,4 +85,4 @@ if __name__ == '__main__':
         bb.waitForNotifications(1.0)
 
     # Must manually disconnect or you won't be able to reconnect.
-bb.disconnect()
+    bb.disconnect()
