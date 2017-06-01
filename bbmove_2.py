@@ -1,14 +1,14 @@
 #!/usr/bin/env python
-# coding: utf-8
+#coding: utf-8
 
-
+#jsonを指定時間ごとに開けて最新を読み取って表示するやつです
 import os
 import glob
 import json
 import pygame
 from pygame.locals import *
 import sys
-
+##
 from bb8_2 import BB8
 
 def get_values():
@@ -19,17 +19,21 @@ def get_values():
             with open(filetmp[-1],'r') as f:
                 tmp=json.load(f)
             data=tmp["people"][0]["body_parts"]
-            #残りのファイルを削除する
-            for this in filetmp:
-                os.remove(this)
-            return data
+            if data:#からじゃなかったら
+                #残りのファイルを削除する
+                for this in filetmp:
+                    os.remove(this)
+                print data
+                return data
+            else:
+                print 'cant get value2'
+                return 1
         except:
-            print 'read_nexttime'
+            print 'cant get value1'
             return 1
 
-#向井追加分
 data2=[]
-READ_RATE=1000
+READ_RATE=1000#milisec
 SCREEN_SIZE = (640, 480)
 framerate=100
 COUNTA=READ_RATE/framerate
@@ -38,33 +42,37 @@ clock = pygame.time.Clock()
 i=0
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
-pygame.display.set_caption("example")
+pygame.display.set_caption(u"値を読むだけだよ".encode('utf-8'))
+
+# フォントの作成
+myfont = pygame.font.Font("ipag.ttf", 30)
+
 #描画（毎回やる）
-pose=get_values()
 try:
-    a=pose[10]
+    pose=get_values()
     texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
     textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
     texta=unicode(texta.decode('utf-8'))
     textb=unicode(textb.decode('utf-8'))
-
-    # テキストを描画したSurfaceを作成
-    hello1 = myfont.render('right shoulder'+texta, False, (0,0,0))
-    hello2 = myfont.render('right arm'+textb,True, (0,0,0))
-    hello3=myfont.render(str(i), True, (0,0,0))
 except:
-    print 'read_next'
+    texta=u'ぬる'
+    textb=u'塗る'
+
+# テキストを描画したSurfaceを作成
+hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
+hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
+hello3=myfont.render(str(i), True, (0,0,0))
 counta=0
 
+
+##
 bb = BB8('F5:6B:10:17:17:17')
 bb.cmd(0x02, 0x20, [0x10, 0x10, 0x10, 0])
 bb.cmd(0x02, 0x21, [0xff])
 
-keys = [False] * 1024
-h = 0
+
 
 while True:
-    #向井追加分
     if counta==COUNTA:
         pose=get_values()
         try:
@@ -75,57 +83,47 @@ while True:
             textb=unicode(textb.decode('utf-8'))
 
             # テキストを描画したSurfaceを作成
-            hello1 = myfont.render('right shoulder'+texta, False, (0,0,0))
-            hello2 = myfont.render('right arm'+textb,True, (0,0,0))
+            hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
+            hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
             hello3=myfont.render(str(i), True, (0,0,0))
-	    # テキストを描画する
-	    screen.blit(hello1, (90,50))
-	    screen.blit(hello2, (90,150))
-	    screen.blit(hello3, (90,250))
         except:
+            print type(pose)
             print 'read_next'
         counta=0
     screen.fill((255,255,255))
     counta+=1
+    # テキストを描画する
+    screen.blit(hello1, (90,50))
+    screen.blit(hello2, (90,150))
+    screen.blit(hello3, (90,250))
+
     pygame.display.update()
-
-    events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.KEYDOWN:
-            keys[event.key] = True
-        elif event.type == pygame.KEYUP:
-            keys[event.key] = False
-    if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-    clock.tick(framerate)
-
-    try:
-        if pose[13]-pose[7]>0:
-	    v = 255
-	else:
-	    v=100
-    except:
+    counta+=1
+    ##
+    h=0
+    if pose[13]-pose[7]>0:
+        v = 250
+        bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+        i+=1
+    else:
         v=0
-        print "skip"
 
 
+    for event in pygame.event.get():
+    #キーボード操作
+    
+        if event.type == KEYDOWN:
+            score=0
+            if event.key == K_LEFT:
+                score=-1
+            if event.key == K_RIGHT:
+                score=1
+            if event.key == K_SPACE:
+                score=0
 
-   # if keys[pygame.K_UP]:
-   #     v = 100
-   # elif keys[pygame.K_DOWN]:
-   #     v = 255
-   # else:
-   #     v = 0
+    #終了処理
+    if event.type == QUIT:
+        pygame.quit()
+        sys.exit()
 
-    if keys[pygame.K_LEFT]:
-        h -= 15
-    elif keys[pygame.K_RIGHT]:
-        h += 15
-    while h<0:
-        h += 360
-    while h>359:
-        h -= 360
-    print h
-
-    bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+    clock.tick(framerate)
