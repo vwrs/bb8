@@ -12,10 +12,11 @@ import sys
 from bb8_2 import BB8
 
 def get_values():
-    filetmp=glob.glob('~/output/*.json')
+    filetmp=glob.glob('/home/ubuntu/output/*.json')
     if len(filetmp)!=0:
         try:
             filetmp.sort()
+	    print filetmp[-2]
             with open(filetmp[-1],'r') as f:
                 tmp=json.load(f)
             data=tmp["people"][0]["body_parts"]
@@ -33,9 +34,9 @@ def get_values():
             return 1
 
 data2=[]
-READ_RATE=1000#milisec
+READ_RATE=80#milisec
 SCREEN_SIZE = (640, 480)
-framerate=100
+framerate=10
 COUNTA=READ_RATE/framerate
 clock = pygame.time.Clock()
 
@@ -71,7 +72,7 @@ bb.cmd(0x02, 0x20, [0x10, 0x10, 0x10, 0])
 bb.cmd(0x02, 0x21, [0xff])
 
 
-
+h=0
 while True:
     if counta==COUNTA:
         pose=get_values()
@@ -85,7 +86,7 @@ while True:
             # テキストを描画したSurfaceを作成
             hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
             hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
-            hello3=myfont.render(str(i), True, (0,0,0))
+            hello3=myfont.render(str(h), True, (0,0,0))
         except:
             print type(pose)
             print 'read_next'
@@ -100,12 +101,24 @@ while True:
     pygame.display.update()
     counta+=1
     ##
-    h=0
-    if pose[13]-pose[7]>0:
-        v = 250
-        bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
-        i+=1
-    else:
+    try:
+	if pose[6]-pose[12]>100:
+        	h += 8
+    	elif pose[12]-pose[6]>100:
+        	h -= 8
+    	while h<0:
+        	h += 360
+    	while h>359:
+        	h -= 360
+
+        if pose[13]<pose[7]:
+            v = 250
+            bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+            i+=1
+        else:
+            v = 0
+	    bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+    except:
         v=0
 
 
@@ -115,9 +128,11 @@ while True:
         if event.type == KEYDOWN:
             score=0
             if event.key == K_LEFT:
-                score=-1
+                v=125
+		bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
             if event.key == K_RIGHT:
-                score=1
+		v=50
+                bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
             if event.key == K_SPACE:
                 score=0
 
