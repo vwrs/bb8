@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # BB-8 Python driver by Alistair Buxton <a.j.buxton@gmail.com>
 
 from bluepy import btle
-
 import time
 
 class BB8(btle.DefaultDelegate):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding: utf-8
+# -*- coding: utf-8 -*-
 
 #jsonを指定時間ごとに開けて最新を読み取って表示するやつです
 import os
@@ -9,7 +9,7 @@ import pygame
 from pygame.locals import *
 import sys
 ##
-from bb8_2 import BB8
+from bb8 import BB8
 
 def get_values():
     filetmp=glob.glob('~/output/*.json')
@@ -111,7 +111,7 @@ while True:
 
     for event in pygame.event.get():
     #キーボード操作
-    
+
         if event.type == KEYDOWN:
             score=0
             if event.key == K_LEFT:
