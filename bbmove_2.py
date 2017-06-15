@@ -8,8 +8,10 @@ import json
 import pygame
 from pygame.locals import *
 import sys
+import time
 ##
-from bb8_2 import BB8
+from bb8 import BB8
+import BB8_driver
 
 def get_values():
     filetmp=glob.glob('/home/ubuntu/output/*.json')
@@ -65,11 +67,18 @@ hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
 hello3=myfont.render(str(i), True, (0,0,0))
 counta=0
 
+## const
+SPEED = 100
 
 ##
-bb = BB8('F5:6B:10:17:17:17')
-bb.cmd(0x02, 0x20, [0x10, 0x10, 0x10, 0])
-bb.cmd(0x02, 0x21, [0xff])
+#bb = BB8('F5:6B:10:17:17:17')
+bb8 = BB8_driver.Sphero('F5:6B:10:17:17:17')
+bb8.connect()
+bb8.start()
+time.sleep(2)
+
+#bb8.cmd(0x02, 0x20, [0x10, 0x10, 0x10, 0]) # set LED
+#bb8.cmd(0x02, 0x21, [0xff]) # set back LED
 
 
 h=0
@@ -113,11 +122,11 @@ while True:
 
         if pose[13]<pose[7]:
             v = 250
-            bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+            #bb8.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
             i+=1
         else:
             v = 0
-	    bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+	    #bb8.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
     except:
         v=0
 
@@ -129,10 +138,12 @@ while True:
             score=0
             if event.key == K_LEFT:
                 v=125
-		bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+		#bb8.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+		bb8.roll(SPEED,270,1,False)
             if event.key == K_RIGHT:
 		v=50
-                bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+                #bb8.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+		bb8.roll(SPEED,90,1,False)
             if event.key == K_SPACE:
                 score=0
 
@@ -142,3 +153,4 @@ while True:
         sys.exit()
 
     clock.tick(framerate)
+    bb8.disconnect()

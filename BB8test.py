@@ -4,9 +4,9 @@ import struct
 import time
 import BB8_driver
 import sys
-bb8 = BB8_driver.Sphero()
+bb8 = BB8_driver.Sphero('F5:6B:10:17:17:17')
+#bb = BB8('F5:6B:10:17:17:17')
 bb8.connect()
-
 
 bb8.start()
 time.sleep(2)
