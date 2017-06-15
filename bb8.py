@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # BB-8 Python driver by Alistair Buxton <a.j.buxton@gmail.com>
 
 from bluepy import btle
-
 import time
 
 class BB8(btle.DefaultDelegate):
@@ -25,11 +25,11 @@ class BB8(btle.DefaultDelegate):
 
         # This startup sequence is also identical to the one for Ollie.
         # It even uses the same unlock code.
-        print('Sending antidos')
+        print 'Sending antidos'
         self.antidos.write('011i3', withResponse=True)
-        print('Sending txpower')
+        print 'Sending txpower'
         self.txpower.write('\x0007', withResponse=True)
-        print('Sending wakecpu')
+        print 'Sending wakecpu'
         self.wakecpu.write('\x01', withResponse=True)
 
     def getSpheroCharacteristic(self, fragment):
@@ -37,9 +37,9 @@ class BB8(btle.DefaultDelegate):
 
     def dumpCharacteristics(self):
         for s in self.peripheral.getServices():
-            print(s)
+            print s
             for c in s.getCharacteristics():
-                print(c, hex(c.handle))
+                print c, hex(c.handle)
 
     def cmd(self, did, cid, data=[], answer=True, resetTimeout=True):
         # Commands are as specified in Sphero API 1.50 PDF.
@@ -54,12 +54,12 @@ class BB8(btle.DefaultDelegate):
         chk ^= 255
 
         msg = [0xff, sop2, did, cid, seq, dlen] + data + [chk]
-        print('cmd:', ' '.join([chr(c).encode('hex') for c in msg]))
+        print 'cmd:', ' '.join([chr(c).encode('hex') for c in msg])
         # Note: withResponse is very important. Most commands won't work without it.
         self.roll.write(''.join([chr(c) for c in msg]), withResponse=True)
 
     def handleNotification(self, cHandle, data):
-        print('Notification:', cHandle, data.encode('hex'))
+        print 'Notification:', cHandle, data.encode('hex')
 
     def waitForNotifications(self, time):
         self.peripheral.waitForNotifications(time)
