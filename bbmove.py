@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+!/usr/bin/env python
 #coding: utf-8
 
 #jsonを指定時間ごとに開けて最新を読み取って表示するやつです
@@ -46,7 +46,7 @@ def display_values(pose,i,myfont,screen):
         hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
         hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
         hello3 = myfont.render(str(i), True, (0,0,0))
-        screen.blit(hello, (90,50))
+        screen.blit(hello1, (90,50))
         screen.blit(hello2, (90,150))
         screen.blit(hello3, (90,250))
     pygame.display.update()
