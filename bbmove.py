@@ -16,7 +16,7 @@ def get_values():
     if len(filetmp)!=0:
         try:
             filetmp.sort()
-	    print filetmp[-2]
+            print filetmp[-2]
             with open(filetmp[-1],'r') as f:
                 tmp=json.load(f)
             data=tmp["people"][0]["body_parts"]
@@ -34,20 +34,20 @@ def get_values():
             return 1
 
 def display_values(pose,i,myfont,screen):
-	try:
-		texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
-		textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
-		texta=unicode(texta.decode('utf-8'))
-		textb=unicode(textb.decode('utf-8'))
-	except:
-		texta=u'NULL'
-		textb=u'NULL'
-		hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
-		hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
-		hello3 = myfont.render(str(i), True, (0,0,0))
-		screen.blit(hello, (90,50))
-		screen.blit(hello2, (90,150))
-		screen.blit(hello3, (90,250))
+    try:
+        texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
+        textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
+        texta=unicode(texta.decode('utf-8'))
+        textb=unicode(textb.decode('utf-8'))
+    except:
+        texta=u'NULL'
+        textb=u'NULL'
+        hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
+        hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
+        hello3 = myfont.render(str(i), True, (0,0,0))
+        screen.blit(hello, (90,50))
+        screen.blit(hello2, (90,150))
+        screen.blit(hello3, (90,250))
 
 
 data2=[]
@@ -83,9 +83,9 @@ while True:
     if counta==COUNTA:
         pose=get_values()
         screen.fill((255,255,255))
-		try:
+        try:
             a=pose[10]
-			display_values(pose,i,myfont,screen)
+            display_values(pose,i,myfont,screen)
         except:
             print type(pose)
             print 'read_next'
@@ -97,14 +97,14 @@ while True:
     counta+=1
     ##
     try:
-	if pose[6]-pose[12]>100:
-        	h += 8
-    	elif pose[12]-pose[6]>100:
-        	h -= 8
-    	while h<0:
-        	h += 360
-    	while h>359:
-        	h -= 360
+        if pose[6]-pose[12]>100:
+            h += 8
+        elif pose[12]-pose[6]>100:
+            h -= 8
+        while h<0:
+            h += 360
+        while h>359:
+            h -= 360
 
         if pose[13]<pose[7]:
             v = 250
@@ -112,21 +112,20 @@ while True:
             i+=1
         else:
             v = 0
-	    bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+        bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
     except:
         v=0
 
 
     for event in pygame.event.get():
     #キーボード操作
-    
         if event.type == KEYDOWN:
             score=0
             if event.key == K_LEFT:
                 v=125
-		bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
+                bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
             if event.key == K_RIGHT:
-		v=50
+                v=50
                 bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
             if event.key == K_SPACE:
                 score=0
