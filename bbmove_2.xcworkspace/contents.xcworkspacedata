@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "container:../out2/hyoji_bb8.py">
+   </FileRef>
+   <FileRef
+      location = "group:../../unilab/out2/hyoji_refine.py">
+   </FileRef>
+</Workspace>
