@@ -34,6 +34,7 @@ def get_values():
             return 1
 
 def display_values(pose,i,myfont,screen):
+    screen.fill((255,255,255))
     try:
         texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
         textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
@@ -48,8 +49,7 @@ def display_values(pose,i,myfont,screen):
         screen.blit(hello, (90,50))
         screen.blit(hello2, (90,150))
         screen.blit(hello3, (90,250))
-
-
+    pygame.display.update()
 data2=[]
 READ_RATE=80#milisec
 SCREEN_SIZE = (640, 480)
@@ -67,7 +67,7 @@ myfont = pygame.font.Font("ipag.ttf", 30)
 
 #描画（毎回やる）
 pose=get_values()
-display_values(pose,i,myfont,screen)
+screen=display_values(pose,i,myfont,screen)
 # テキストを描画したSurfaceを作成
 counta=0
 
@@ -82,7 +82,6 @@ h=0
 while True:
     if counta==COUNTA:
         pose=get_values()
-        screen.fill((255,255,255))
         try:
             a=pose[10]
             display_values(pose,i,myfont,screen)
@@ -92,8 +91,6 @@ while True:
         counta=0
     counta+=1
     # テキストを描画する
-
-    pygame.display.update()
     counta+=1
     ##
     try:
