@@ -8,6 +8,7 @@ import json
 import pygame
 from pygame.locals import *
 import sys
+import time
 import BB8_driver as BB8
 
 def get_values():
@@ -80,12 +81,12 @@ def main():
     bb8.start()
     time.sleep(2)
 
-    bb8.set_rgb_led(0,0,255, False, False)
+    #bb8.set_rgb_led(0,0,255, False, False)
     bb8.set_back_led(255, False)
-    speed = 250
+    speed = 50
 
 
-    state = 1
+    state = 0
     heading = 0
     while True:
         if counta == COUNTA:
@@ -106,17 +107,15 @@ def main():
                 heading += 8
             elif pose[12] - pose[6]>100:
                 heading -= 8
-            if heading < 0:
-                heading += 360
-            if heading > 359:
-                heading -= 360
 
+
+	   
             if pose[13] < pose[7]:
-                speed = 50
+		state = 1
             else:
-                speed = 0
+                state = 0
         except:
-            speed=0
+            state = 0
 
 
         for event in pygame.event.get():
@@ -124,19 +123,22 @@ def main():
             if event.type == KEYDOWN:
                 score=0
                 if event.key == K_UP:
-                    speed = 50
-                    heading = 0
+		    speed += 10
                 if event.key == K_LEFT:
-                    speed = 50
-                    heading = 270
+                    heading -= 10 
                 if event.key == K_RIGHT:
-                    speed = 50
-                    heading = 90
+                    heading += 10
+                if event.key == K_DOWN:
+		    speed -= 10
+
                 if event.key == K_SPACE:
                     score=0
                     state = 1 - state
-        except:
 
+	if heading < 0:
+	    heading += 360
+	if heading > 359:
+	    heading -= 360
         bb8.roll(speed, heading, state, False)
         #終了処理
         if event.type == QUIT:
