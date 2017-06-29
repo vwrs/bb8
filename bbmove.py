@@ -8,8 +8,7 @@ import json
 import pygame
 from pygame.locals import *
 import sys
-##
-from bb8 import BB8
+import BB8_driver as BB8
 
 def get_values():
     filetmp=glob.glob('/home/ubuntu/output/*.json')
@@ -50,86 +49,101 @@ def display_values(pose,i,myfont,screen):
     screen.blit(hello2, (90,150))
     screen.blit(hello3, (90,250))
     pygame.display.update()
-data2=[]
-READ_RATE=80#milisec
-SCREEN_SIZE = (640, 480)
-framerate=10
-COUNTA=READ_RATE/framerate
-clock = pygame.time.Clock()
 
-i=0
-pygame.init()
-screen = pygame.display.set_mode(SCREEN_SIZE)
-pygame.display.set_caption(u"値を読むだけだよ".encode('utf-8'))
+def main():
+    data2=[]
+    READ_RATE=80#milisec
+    SCREEN_SIZE = (640, 480)
+    framerate=10
+    COUNTA=READ_RATE/framerate
+    clock = pygame.time.Clock()
+
+    i=0
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE)
+    pygame.display.set_caption(u"値を読むだけだよ".encode('utf-8'))
 
 # フォントの作成
-myfont = pygame.font.Font("ipag.ttf", 30)
+    myfont = pygame.font.Font("ipag.ttf", 30)
 
 #描画（毎回やる）
-pose=get_values()
-display_values(pose,i,myfont,screen)
+    pose=get_values()
+    display_values(pose,i,myfont,screen)
 # テキストを描画したSurfaceを作成
-counta=0
+    counta=0
 
 
-##
-bb = BB8('F5:6B:10:17:17:17')
-bb.cmd(0x02, 0x20, [0x10, 0x10, 0x10, 0])
-bb.cmd(0x02, 0x21, [0xff])
+# connect to BB8
+    bb8 = BB8.Sphero('F5:6B:10:17:17:17')
+    bb8.connect()
+
+    bb8.start()
+    time.sleep(2)
+
+    bb8.set_rgb_led(0,0,255, False, False)
+    bb8.set_back_led(255, False)
+    speed = 250
 
 
-h=0
-while True:
-    if counta==COUNTA:
-        pose=get_values()
+    state = 1
+    heading = 0
+    while True:
+        if counta == COUNTA:
+            pose = get_values()
+            try:
+                a = pose[10]
+                display_values(pose,i,myfont,screen)
+            except:
+                print type(pose)
+                print 'read_next'
+            counta = 0
+        counta += 1
+        # テキストを描画する
+        counta += 1
+        ##
         try:
-            a=pose[10]
-            display_values(pose,i,myfont,screen)
+            if pose[6] - pose[12]>100:
+                heading += 8
+            elif pose[12] - pose[6]>100:
+                heading -= 8
+            if heading < 0:
+                heading += 360
+            if heading > 359:
+                heading -= 360
+
+            if pose[13] < pose[7]:
+                speed = 50
+            else:
+                speed = 0
         except:
-            print type(pose)
-            print 'read_next'
-        counta=0
-    counta+=1
-    # テキストを描画する
-    counta+=1
-    ##
-    try:
-        if pose[6]-pose[12]>100:
-            h += 8
-        elif pose[12]-pose[6]>100:
-            h -= 8
-        while h<0:
-            h += 360
-        while h>359:
-            h -= 360
-
-        if pose[13]<pose[7]:
-            v = 250
-            bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
-            i+=1
-        else:
-            v = 0
-        bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
-    except:
-        v=0
+            speed=0
 
 
-    for event in pygame.event.get():
-    #キーボード操作
-        if event.type == KEYDOWN:
-            score=0
-            if event.key == K_LEFT:
-                v=125
-                bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
-            if event.key == K_RIGHT:
-                v=50
-                bb.cmd(0x02, 0x30, [v, (h&0xff00)>>8, h&0xff, 1])
-            if event.key == K_SPACE:
+        for event in pygame.event.get():
+        #キーボード操作
+            if event.type == KEYDOWN:
                 score=0
+                if event.key == K_UP:
+                    speed = 50
+                    heading = 0
+                if event.key == K_LEFT:
+                    speed = 50
+                    heading = 270
+                if event.key == K_RIGHT:
+                    speed = 50
+                    heading = 90
+                if event.key == K_SPACE:
+                    score=0
+                    state = 1 - state
+        except:
 
-    #終了処理
-    if event.type == QUIT:
-        pygame.quit()
-        sys.exit()
+        bb8.roll(speed, heading, state, False)
+        #終了処理
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
 
-    clock.tick(framerate)
+        clock.tick(framerate)
+
+if __name__ == '__main__':
+    main()
