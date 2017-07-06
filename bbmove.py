@@ -33,12 +33,26 @@ def get_values():
             print 'cant get value1'
             return 1
 
-def display_values(pose,i,myfont,screen,act):
+def display_values(pose,i,myfont,screen,act=0):
     resize=0.4
     screen.fill((255,255,255))
     try:
         for i in [0,6,12,15,21,24,33]:
             pygame.draw.circle(screen, (0,0,255), (pose[i]*resize,pose[i+1]*resize), 5)
+        if act!=0:
+            if act=1:
+                pygame.draw.circle(screen, (255,0,0), (pose[12]*resize,pose[12+1]*resize), 5)
+            elif act=2:
+                pygame.draw.circle(screen, (255,0,0), (pose[21]*resize,pose[21+1]*resize), 5)
+            elif act=3:
+                pygame.draw.circle(screen, (255,0,0), (pose[12]*resize,pose[12+1]*resize), 5)
+                pygame.draw.circle(screen, (255,0,0), (pose[21]*resize,pose[21+1]*resize), 5)
+                pygame.draw.circle(screen, (255,0,0), (pose[0]*resize,pose[1]*resize), 5)
+            elif act=4:
+                pygame.draw.circle(screen, (0,255,0), (pose[12]*resize,pose[12+1]*resize), 5)
+                pygame.draw.circle(screen, (0,255,0), (pose[21]*resize,pose[21+1]*resize), 5)
+                pygame.draw.circle(screen, (0,255,0), (pose[0]*resize,pose[1]*resize), 5)
+                    
         texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
         textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
         texta=unicode(texta.decode('utf-8'))
