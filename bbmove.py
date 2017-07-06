@@ -40,7 +40,7 @@ def display_values(pose,i,myfont,screen,act=0):
         for i in [0,6,12,15,21,24,33]:
             pygame.draw.circle(screen, (0,0,255), (int(pose[i]*resize),int(pose[i+1]*resize)), 5)
         if act!=0:
-	    if act==1:
+            if act==1:
                 pygame.draw.circle(screen, (255,0,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
             elif act==2:
                 pygame.draw.circle(screen, (255,0,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
@@ -52,7 +52,7 @@ def display_values(pose,i,myfont,screen,act=0):
                 pygame.draw.circle(screen, (0,255,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
                 pygame.draw.circle(screen, (0,255,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
                 pygame.draw.circle(screen, (0,255,0), (int(pose[0]*resize),int(pose[1]*resize)), 5)
-                    
+
         texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
         textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
         texta=unicode(texta.decode('utf-8'))
@@ -69,6 +69,27 @@ def display_values(pose,i,myfont,screen,act=0):
     pygame.display.update()
 
 def main():
+    poselist = dict(
+        nose=0,
+        neck=1,
+        rshoulder=2,
+        relbow=3,
+        rwrist=4,
+        lshoulder=5,
+        lelbow=6,
+        lwrist=7,
+        rhip=8,
+        rknee=9,
+        rankle=10,
+        lhip=11,
+        lknee=12,
+        lankle=13,
+        reye=14,
+        leye=15,
+        rear=16,
+        lear=17,
+        bkg=18,
+    )
     data2=[]
     READ_RATE=80#milisec
     SCREEN_SIZE = (640, 480)
@@ -105,57 +126,83 @@ def main():
 
     state = 0
     heading = 0
+
+    act = 0
+# start
     while True:
         if counta == COUNTA:
             pose = get_values()
             try:
-                a = pose[10]
-                display_values(pose,i,myfont,screen)
+                rshould_x = pose[poselist["rshould"]*3]
+                rshould_y = pose[poselist["rshould"]*3+1]
+                relbow_x  = pose[poselist["relbow"]*3]
+                relbow_y  = pose[poselist["relbow"]*3+1]
+                rwrist_x  = pose[poselist["rwrist"]*3]
+                rwrist_y  = pose[poselist["rwrist"]*3+1]
+                lshould_x = pose[poselist["lshould"]*3]
+                lshould_y = pose[poselist["lshould"]*3+1]
+                lelbow_x  = pose[poselist["lelbow"]*3]
+                lelbow_y  = pose[poselist["lelbow"]*3+1]
+                lwrist_x  = pose[poselist["lwrist"]*3]
+                lwrist_y  = pose[poselist["lwrist"]*3+1]
+
+                display_values(pose,i,myfont,screen,act)
             except:
                 print type(pose)
                 print 'read_next'
             counta = 0
         counta += 1
-        # テキストを描画する
-        counta += 1
-        ##
+
+        # BB-8を動かすルール
         try:
-            if pose[6] - pose[12]>100:
+            # 両手を肩よりあげる→前進
+            if rshould_y > rwrist_y && lshould_y > lwrist_y:
+                speed = 50
+                state = 1
+                act = 3
+            # 両手をクロス→ターボ
+            elif rwrist_x > lwrist_x && rwrist_y < relbow_y && lwrist_y < lelbow_y:
+                speed = 255
+                act = 4
+                state = 1
+            # 右手だけを肩より上げる→右回転
+            elif rshould_y > rwrist_y && lshould_y < lwrist_y:
                 heading += 8
-            elif pose[12] - pose[6]>100:
+                state = 0
+                act = 1
+            # 左手だけを肩より上げる→左回転
+            elif rshould_y < rwrist_y && lshould_y > lwrist_y:
                 heading -= 8
-
-
-	   
-            if pose[13] < pose[7]:
-		state = 1
+                state = 0
+                act = 2
             else:
                 state = 0
+                act = 0
         except:
             state = 0
 
 
-        for event in pygame.event.get():
-        #キーボード操作
-            if event.type == KEYDOWN:
-                score=0
-                if event.key == K_UP:
-		    speed += 10
-                if event.key == K_LEFT:
-                    heading -= 10 
-                if event.key == K_RIGHT:
-                    heading += 10
-                if event.key == K_DOWN:
-		    speed -= 10
+      #   for event in pygame.event.get():
+      #   #キーボード操作
+      #       if event.type == KEYDOWN:
+      #           score=0
+      #           if event.key == K_UP:
+                    # speed += 10
+      #           if event.key == K_LEFT:
+      #               heading -= 10
+      #           if event.key == K_RIGHT:
+      #               heading += 10
+      #           if event.key == K_DOWN:
+                    # speed -= 10
+      #
+      #           if event.key == K_SPACE:
+      #               score=0
+      #               state = 1 - state
 
-                if event.key == K_SPACE:
-                    score=0
-                    state = 1 - state
-
-	if heading < 0:
-	    heading += 360
-	if heading > 359:
-	    heading -= 360
+        if heading < 0:
+            heading += 360
+        if heading > 359:
+            heading -= 360
         bb8.roll(speed, heading, state, False)
         #終了処理
         if event.type == QUIT:
