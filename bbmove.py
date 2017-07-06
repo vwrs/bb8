@@ -15,7 +15,7 @@ def get_values():
     filetmp=glob.glob('/home/ubuntu/output/*.json')
     if len(filetmp)!=0:
         try:
-             filetmp.sort()
+            filetmp.sort()
             print filetmp[-2]
             with open(filetmp[-1],'r') as f:
                 tmp=json.load(f)
@@ -38,20 +38,20 @@ def display_values(pose,i,myfont,screen,act=0):
     screen.fill((255,255,255))
     try:
         for i in [0,6,12,15,21,24,33]:
-            pygame.draw.circle(screen, (0,0,255), (pose[i]*resize,pose[i+1]*resize), 5)
+            pygame.draw.circle(screen, (0,0,255), (int(pose[i]*resize),int(pose[i+1]*resize)), 5)
         if act!=0:
-            if act=1:
-                pygame.draw.circle(screen, (255,0,0), (pose[12]*resize,pose[12+1]*resize), 5)
-            elif act=2:
-                pygame.draw.circle(screen, (255,0,0), (pose[21]*resize,pose[21+1]*resize), 5)
-            elif act=3:
-                pygame.draw.circle(screen, (255,0,0), (pose[12]*resize,pose[12+1]*resize), 5)
-                pygame.draw.circle(screen, (255,0,0), (pose[21]*resize,pose[21+1]*resize), 5)
-                pygame.draw.circle(screen, (255,0,0), (pose[0]*resize,pose[1]*resize), 5)
-            elif act=4:
-                pygame.draw.circle(screen, (0,255,0), (pose[12]*resize,pose[12+1]*resize), 5)
-                pygame.draw.circle(screen, (0,255,0), (pose[21]*resize,pose[21+1]*resize), 5)
-                pygame.draw.circle(screen, (0,255,0), (pose[0]*resize,pose[1]*resize), 5)
+	    if act==1:
+                pygame.draw.circle(screen, (255,0,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
+            elif act==2:
+                pygame.draw.circle(screen, (255,0,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
+            elif act==3:
+                pygame.draw.circle(screen, (255,0,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
+                pygame.draw.circle(screen, (255,0,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
+                pygame.draw.circle(screen, (255,0,0), (int(pose[0]*resize),int(pose[1]*resize)), 5)
+            elif act==4:
+                pygame.draw.circle(screen, (0,255,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
+                pygame.draw.circle(screen, (0,255,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
+                pygame.draw.circle(screen, (0,255,0), (int(pose[0]*resize),int(pose[1]*resize)), 5)
                     
         texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
         textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
@@ -61,7 +61,7 @@ def display_values(pose,i,myfont,screen,act=0):
         texta=u'NULL'
         textb=u'NULL'
     hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
-    hello2 = imyfont.render(u'右腕'+textb,True, (0,0,0))
+    hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
     hello3 = myfont.render(str(i), True, (0,0,0))
     screen.blit(hello1, (90,50))
     screen.blit(hello2, (90,150))
