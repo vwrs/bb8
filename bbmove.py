@@ -37,21 +37,25 @@ def display_values(pose,i,myfont,screen,act=0):
     resize=0.4
     screen.fill((255,255,255))
     try:
+        for edg in [[0,6],[6,12],[0,15],[15,21],[0,24],[0,33],[24,33],[6,24],[15,33]]:
+            pygame.draw.line(screen, (126,126,126), (pose[edg[0]],pose[edg[0]+1]), (pose[edg[1]],pose[edg[1]+1]),3)
         for i in [0,6,12,15,21,24,33]:
             pygame.draw.circle(screen, (0,0,255), (int(pose[i]*resize),int(pose[i+1]*resize)), 5)
         if act!=0:
             if act==1:
-                pygame.draw.circle(screen, (255,0,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
+                pygame.draw.circle(screen, (255,0,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 10)
             elif act==2:
-                pygame.draw.circle(screen, (255,0,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
+                pygame.draw.circle(screen, (255,0,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 10)
             elif act==3:
-                pygame.draw.circle(screen, (255,0,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
-                pygame.draw.circle(screen, (255,0,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
-                pygame.draw.circle(screen, (255,0,0), (int(pose[0]*resize),int(pose[1]*resize)), 5)
+                pygame.draw.circle(screen, (255,0,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 10)
+                pygame.draw.circle(screen, (255,0,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 10)
+                pygame.draw.circle(screen, (255,0,0), (int(pose[0]*resize),int(pose[1]*resize)), 10)
             elif act==4:
-                pygame.draw.circle(screen, (0,255,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 5)
-                pygame.draw.circle(screen, (0,255,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 5)
-                pygame.draw.circle(screen, (0,255,0), (int(pose[0]*resize),int(pose[1]*resize)), 5)
+                pygame.draw.circle(screen, (0,255,0), (int(pose[12]*resize),int(pose[12+1]*resize)), 10)
+                pygame.draw.circle(screen, (0,255,0), (int(pose[21]*resize),int(pose[21+1]*resize)), 10)
+                pygame.draw.circle(screen, (0,255,0), (int(pose[0]*resize),int(pose[1]*resize)), 10)
+                for edg in [[0,6],[6,12],[0,15],[15,21],[0,24],[0,33],[24,33],[6,24],[15,33]]:
+                    pygame.draw.line(screen, (0,255,0), (pose[edg[0]],pose[edg[0]+1]), (pose[edg[1]],pose[edg[1]+1]),10)
 
         texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
         textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
