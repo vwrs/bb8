@@ -19,7 +19,7 @@ def get_values():
             print filetmp[-2]
             with open(filetmp[-1],'r') as f:
                 tmp=json.load(f)
-            data=tmp["people"][0]["body_parts"]
+            data=tmp["people"][0]["pose_keypoints"]
             if data:#からじゃなかったら
                 #残りのファイルを削除する
                 for this in filetmp:
@@ -150,9 +150,14 @@ def main():
                 lelbow_y  = pose[6*3+1]
                 lwrist_x  = pose[7*3]
                 lwrist_y  = pose[7*3+1]
-		readall = True
-                print "readall"
-  	        print "act: ", act
+      	        if not (rshould_x == 0 or
+		        relbow_x == 0  or
+                        rwrist_x == 0  or
+                        lshould_x == 0 or
+		        lelbow_x == 0  or
+                        lwrist_x == 0):
+		    readall = True
+                    print "readall"
             except:
                 print type(pose)
                 print 'read_next'
