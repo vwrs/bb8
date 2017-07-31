@@ -116,6 +116,7 @@ def main():
 
 
 # connect to BB8
+# TODO: macaddress no bunki
     bb8 = BB8.Sphero('F5:6B:10:17:17:17')
     bb8.connect()
 
@@ -123,7 +124,7 @@ def main():
     time.sleep(2)
 
     #bb8.set_rgb_led(0,0,255, False, False)
-    bb8.set_back_led(255, False)
+    bb8.set_back_led(55, False)
     speed = 50
 
 
@@ -173,14 +174,16 @@ def main():
         # 両手を肩よりあげる→前進
 	if readall:
             if rshould_y > rwrist_y and lshould_y > lwrist_y:
-                speed = 50
+                speed = 55
                 state = 1
                 act = 3
             # 両手をクロス→ターボ
-            elif rwrist_x > lwrist_x and rwrist_y < relbow_y and lwrist_y < lelbow_y:
+            # TODO: pose wo kaeru (yariyasuimononi)
+            #elif rwrist_x > lwrist_x and rwrist_y < relbow_y and lwrist_y < lelbow_y:
+            elif rwrist_x > lwrist_x:
                 speed = 255
-                act = 4
                 state = 1
+                act = 4
             # 右手だけを肩より上げる→右回転
             elif rshould_y > rwrist_y and lshould_y < lwrist_y:
                 heading += 8
