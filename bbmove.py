@@ -16,7 +16,7 @@ def get_values():
     if len(filetmp)!=0:
         try:
             filetmp.sort()
-            print filetmp[-2]
+            #print filetmp[-2]
             with open(filetmp[-1],'r') as f:
                 tmp=json.load(f)
             data=tmp["people"][0]["pose_keypoints"]
@@ -24,13 +24,11 @@ def get_values():
                 #残りのファイルを削除する
                 for this in filetmp:
                     os.remove(this)
-                print data
+                #print data
                 return data
             else:
-                print 'cant get value2'
                 return 1
         except:
-            print 'cant get value1'
             return 1
 
 def display_values(pose,i,myfont,screen,act=0):
@@ -103,7 +101,7 @@ def main():
     data2=[]
     READ_RATE=80#milisec
     SCREEN_SIZE = (640, 480)
-    framerate=20
+    framerate=22
     COUNTA=READ_RATE/framerate
     clock = pygame.time.Clock()
 
@@ -164,10 +162,9 @@ def main():
 		        lelbow_x == 0  or
                         lwrist_x == 0):
 		    readall = True
-                    print "readall"
             except:
-                print type(pose)
-                print 'read_next'
+                #print type(pose)
+                #print 'read_next'
 		readall = False
 	    try:
 		display_values(pose,i,myfont,screen,act)
@@ -177,7 +174,6 @@ def main():
         counta += 1
 
         # BB-8を動かすルール
-        # TODO: hito ga inakunatta toki ni saigo no act ni naru
         # TODO: sikiiti wo kimete sousasei wo ageru
         # 両手をあげる→前進
 	if readall:
@@ -186,18 +182,18 @@ def main():
                 state = 1
                 act = 3
             # ryote wo kata to heikou ni suru
-            elif abs(rshould_y - relbow_y) < 20 and abs(lshould_y - lelbow_y) < 20 and abs(relbow_y - lelbow_y) < 20:
+            elif abs(rshould_y - relbow_y) < 30 and abs(lshould_y - lelbow_y) < 30 and abs(relbow_y - lelbow_y) < 30:
                 speed = 255
                 state = 1
                 act = 4
             # 右手だけを肩より上げる→右回転
             elif rshould_y - rwrist_y > 80 and lshould_y < lwrist_y:
-                heading += 5
+                heading += 4
                 state = 0
                 act = 1
             # 左手だけを肩より上げる→左回転
             elif rshould_y < rwrist_y and lshould_y - lwrist_y > 80:
-                heading -= 5
+                heading -= 4
                 state = 0
                 act = 2
             else:
