@@ -93,10 +93,17 @@ def main():
    # rear=16,
    # lear=17,
    # bkg=18
+    os.system("rm -f ~/output/*.json")
+    argv = sys.argv
+    if len(argv) != 2:
+	sys.exit("usage: python %s 0(new) or 1(old)" % argv[0])
+    # 0: new 1: old
+    macaddress = "C8:F1:05:23:A1:A4" if int(argv[1]) == 0 else "F5:6B:10:17:17:17"
+
     data2=[]
     READ_RATE=80#milisec
     SCREEN_SIZE = (640, 480)
-    framerate=10
+    framerate=20
     COUNTA=READ_RATE/framerate
     clock = pygame.time.Clock()
 
@@ -116,16 +123,15 @@ def main():
 
 
 # connect to BB8
-# TODO: macaddress no bunki
-    bb8 = BB8.Sphero('F5:6B:10:17:17:17')
+    bb8 = BB8.Sphero(macaddress)
     bb8.connect()
 
     bb8.start()
     time.sleep(2)
 
-    #bb8.set_rgb_led(0,0,255, False, False)
-    bb8.set_back_led(55, False)
-    speed = 50
+    bb8.set_rgb_led(0,0,0, False, False)
+    bb8.set_back_led(255, False)
+    speed = 0
 
 
     state = 0
@@ -171,32 +177,35 @@ def main():
         counta += 1
 
         # BB-8を動かすルール
-        # 両手を肩よりあげる→前進
+        # TODO: hito ga inakunatta toki ni saigo no act ni naru
+        # TODO: sikiiti wo kimete sousasei wo ageru
+        # 両手をあげる→前進
 	if readall:
-            if rshould_y > rwrist_y and lshould_y > lwrist_y:
-                speed = 55
+            if rshould_y - rwrist_y > 50 and lshould_y - lwrist_y > 50:
+                speed = 80 
                 state = 1
                 act = 3
-            # 両手をクロス→ターボ
-            # TODO: pose wo kaeru (yariyasuimononi)
-            #elif rwrist_x > lwrist_x and rwrist_y < relbow_y and lwrist_y < lelbow_y:
-            elif rwrist_x > lwrist_x:
+            # ryote wo kata to heikou ni suru
+            elif abs(rshould_y - relbow_y) < 20 and abs(lshould_y - lelbow_y) < 20 and abs(relbow_y - lelbow_y) < 20:
                 speed = 255
                 state = 1
                 act = 4
             # 右手だけを肩より上げる→右回転
-            elif rshould_y > rwrist_y and lshould_y < lwrist_y:
-                heading += 8
+            elif rshould_y - rwrist_y > 80 and lshould_y < lwrist_y:
+                heading += 5
                 state = 0
                 act = 1
             # 左手だけを肩より上げる→左回転
-            elif rshould_y < rwrist_y and lshould_y > lwrist_y:
-                heading -= 8
+            elif rshould_y < rwrist_y and lshould_y - lwrist_y > 80:
+                heading -= 5
                 state = 0
                 act = 2
             else:
                 state = 0
                 act = 0
+        else:
+	    state = 0
+	    act = 0
 
         for event in pygame.event.get():
         #キーボード操作
