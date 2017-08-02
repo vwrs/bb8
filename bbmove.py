@@ -54,21 +54,13 @@ def display_values(pose,i,myfont,screen,act=0):
                 pygame.draw.circle(screen, (0,255,0), (int(pose[0]*resize),int(pose[1]*resize)), 10)
 		for edg in [[0,6],[6,12],[0,15],[15,21],[0,24],[0,33],[24,33],[6,24],[15,33]]:
             	    pygame.draw.line(screen, (0,256,0), (pose[edg[0]],pose[edg[0]+1]), (pose[edg[1]],pose[edg[1]+1]),5)
-		
-
-        texta=str(pose[6])+' '+str(pose[7])+' '+str(pose[8])
-        textb=str(pose[12])+' '+str(pose[13])+' '+str(pose[14])
-        texta=unicode(texta.decode('utf-8'))
-        textb=unicode(textb.decode('utf-8'))
     except:
-        texta=u'NULL'
-        textb=u'NULL'
-    hello1 = myfont.render(u'右肩'+texta, False, (0,0,0))
-    hello2 = myfont.render(u'右腕'+textb,True, (0,0,0))
-    hello3 = myfont.render(str(act), True, (0,0,0))
-    screen.blit(hello1, (90,50))
-    screen.blit(hello2, (90,150))
-    screen.blit(hello3, (90,250))
+        pass
+    acts = [u'Stop',u'Right',u'Left',u'front',u'Boost']
+    rgb = [(0,0,255),(255,0,0),(255,0,0),(255,0,0),(0,255,0)]
+    act_message = myfont.render(acts[act], True, rgb[act])
+    screen.blit(act_message, (240,50))
+
     pygame.display.update()
 
 def main():
@@ -108,10 +100,10 @@ def main():
     i=0
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    pygame.display.set_caption(u"bb8controler".encode('utf-8'))
+    pygame.display.set_caption(u"BB8 Controller".encode('utf-8'))
 
 # フォントの作成
-    myfont = pygame.font.Font("ipag.ttf", 30)
+    myfont = pygame.font.Font("ipag.ttf", 80)
 
 #描画（毎回やる）
     pose=get_values()
