@@ -56,7 +56,7 @@ def display_values(pose,i,myfont,screen,act=0):
             	    pygame.draw.line(screen, (0,256,0), (pose[edg[0]],pose[edg[0]+1]), (pose[edg[1]],pose[edg[1]+1]),5)
     except:
         pass
-    acts = [u'Stop',u'Right',u'Left',u'front',u'Boost']
+    acts = [u'ストップ',u'右回転',u'左回転',u'前進',u'全速力']
     rgb = [(0,0,255),(255,0,0),(255,0,0),(255,0,0),(0,255,0)]
     act_message = myfont.render(acts[act], True, rgb[act])
     screen.blit(act_message, (240,50))
@@ -100,7 +100,7 @@ def main():
     i=0
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    pygame.display.set_caption(u"BB8 Controller".encode('utf-8'))
+    pygame.display.set_caption(u"BB8コントローラー".encode('utf-8'))
 
 # フォントの作成
     myfont = pygame.font.Font("ipag.ttf", 80)
@@ -166,14 +166,13 @@ def main():
         counta += 1
 
         # BB-8を動かすルール
-        # TODO: sikiiti wo kimete sousasei wo ageru
         # 両手をあげる→前進
 	if readall:
             if rshould_y - rwrist_y > 50 and lshould_y - lwrist_y > 50:
                 speed = 80 
                 state = 1
                 act = 3
-            # ryote wo kata to heikou ni suru
+            # 両手を肩と平行にする 
             elif abs(rshould_y - relbow_y) < 30 and abs(lshould_y - lelbow_y) < 30 and abs(relbow_y - lelbow_y) < 30:
                 speed = 255
                 state = 1
