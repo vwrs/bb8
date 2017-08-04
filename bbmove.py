@@ -58,8 +58,9 @@ def display_values(pose,i,myfont,screen,act=0):
         pass
     acts = [u'ストップ',u'右回転',u'左回転',u'前進',u'全速力']
     rgb = [(0,0,255),(255,0,0),(255,0,0),(255,0,0),(0,255,0)]
+    start_x = [200,230,230,260,230]
     act_message = myfont.render(acts[act], True, rgb[act])
-    screen.blit(act_message, (240,50))
+    screen.blit(act_message, (start_x[act],50))
 
     pygame.display.update()
 
@@ -92,7 +93,7 @@ def main():
 
     data2=[]
     READ_RATE=80#milisec
-    SCREEN_SIZE = (640, 480)
+    SCREEN_SIZE = (720, 520)
     framerate=22
     COUNTA=READ_RATE/framerate
     clock = pygame.time.Clock()
