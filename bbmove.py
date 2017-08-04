@@ -32,7 +32,7 @@ def get_values():
             return 1
 
 def display_values(pose,i,myfont,screen,act=0):
-    resize=0.6
+    resize=0.3
     screen.fill((255,255,255))
     try:
         for edg in [[0,6],[6,12],[0,15],[15,21],[0,24],[0,33],[24,33],[6,24],[15,33]]:
@@ -58,7 +58,7 @@ def display_values(pose,i,myfont,screen,act=0):
         pass
     acts = [u'ストップ',u'右回転',u'左回転',u'前進',u'全速力']
     rgb = [(0,0,255),(255,0,0),(255,0,0),(255,0,0),(0,255,0)]
-    start_x = [200,230,230,260,230]
+    start_x = [100,115,115,130,115]
     act_message = myfont.render(acts[act], True, rgb[act])
     screen.blit(act_message, (start_x[act],50))
 
@@ -89,11 +89,11 @@ def main():
     if len(argv) != 2:
 	sys.exit("usage: python %s 0(new) or 1(old)" % argv[0])
     # 0: new 1: old
-    macaddress = "C8:F1:05:23:A1:A4" if int(argv[1]) == 0 else "F5:6B:10:17:17:17"
+    macaddress = "C8:F1:05:23:A1:A4" if int(argv[1]) == 0 else "C4:6C:E4:39:C9:B8"
 
     data2=[]
     READ_RATE=80#milisec
-    SCREEN_SIZE = (720, 520)
+    SCREEN_SIZE = (360, 260)
     framerate=22
     COUNTA=READ_RATE/framerate
     clock = pygame.time.Clock()
@@ -104,7 +104,7 @@ def main():
     pygame.display.set_caption(u"BB8コントローラー".encode('utf-8'))
 
 # フォントの作成
-    myfont = pygame.font.Font("ipag.ttf", 80)
+    myfont = pygame.font.Font("ipag.ttf", 50)
 
 #描画（毎回やる）
     pose=get_values()
@@ -180,12 +180,12 @@ def main():
                 act = 4
             # 右手だけを肩より上げる→右回転
             elif rshould_y - rwrist_y > 80 and lshould_y < lwrist_y:
-                heading += 4
+                heading += 3
                 state = 0
                 act = 1
             # 左手だけを肩より上げる→左回転
             elif rshould_y < rwrist_y and lshould_y - lwrist_y > 80:
-                heading -= 4
+                heading -= 3
                 state = 0
                 act = 2
             else:
