@@ -1,15 +1,16 @@
 # bb8
 control BB-8(Sphero) by [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
 
-## requirements
+## Requirements
 - python2.7
     - bluepy
     - pygame
 - web camera
 - Ubuntu 16.04 LTS(recommended)
+    - worked on NVIDIA Jetson TX2
 
-## usage
-1. install openpose at ~/openpose
+## Usage
+1. install openpose at ~/openpose and `mkdir ~/output`
 2. get Sphero's mac address & edit `bbmove.py`
 ```
 $ sudo hcitool lescan
@@ -21,5 +22,5 @@ $ ./openpose.sh
 $ python bbmove.py
 ```
 
-ref:
+ref(BB8 driver):
 https://github.com/jchadwhite/SpheroBB8-python

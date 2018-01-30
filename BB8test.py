@@ -1,4 +1,7 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
 from bluepy import btle
 import struct
 import time
